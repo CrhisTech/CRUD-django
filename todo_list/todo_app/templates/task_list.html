@@ -1,0 +1,70 @@
+{% extends "./base.html" %}
+{% block title %} ToDo {% endblock %}
+{% block body %}
+<div class="row">
+    <div class="col-sm-12 col-md-6 col-lg-4 col-xl-4">
+        <h2>Task manager</h2>
+        <div class="card">
+            <div class="card-body">
+                <form action="/create_task/" method="post">{% csrf_token %}
+                    <div class="form-group mb-3">
+                        <input type="text" id="txtTitle" name="txtTitle" class="form-control" placeholder="Title" required>
+                    </div>
+                    <div class="form-group mb-3">
+                        <input type="text" id="txtDescription" name="txtDescription" class="form-control" placeholder="Description">
+                    </div>
+                    <div class="form-group mb-3">
+                        <label for="txtDate" class="form-label">Date</label>
+                        <input type="date" id="txtDate" name="txtDate" class="form-control" required>
+                    </div>
+                    <div class="form-check mb-3">
+                        <input class="form-check-input" type="checkbox" value="on" id="Status" name="Status" required>Completed
+                    </div>
+                    <div class="form-group mb-3 d-grid gap-2 col-6 mx-auto">
+                        <button type="submit" class="btn btn-success btn-block txt-white">Save</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-12 col-md-6 col-lg-8 col-xl-8">
+        <div class="table-responsive py-2">
+            <h1>Task list</h1>
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Title</th>
+                        <th>Description</th>
+                        <th>Fecha</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for t in tasks %}
+                    <tr>
+                        <td>{{t.title}}</td>
+                        <td>{{t.description}}</td>
+                        <td>{{t.date|date:"d/m/Y"}}</td>
+                        <td>{% if t.completed %}
+                            finished
+                            {% else %}
+                            pending
+                            {% endif %}
+                        </td>
+                        <td>
+                            <a href="/edit_task/{{t.id}}/" class="btn btn-warning btn-sm mb-2">
+                                <i class="fas fa-edit"></i> Edit
+                            </a>
+                            <a href="/delete_task/{{t.id}}/" class="btn btn-danger btn-sm mb-2" onclick="return confirm('¿Estás seguro de que quieres eliminar esta tarea?')">
+                                <i class="fas fa-trash"></i> Delete
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %} 
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}
